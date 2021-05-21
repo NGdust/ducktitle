@@ -1,0 +1,17 @@
+Получение текста
+Body - json
+---
+parameters:
+  - name: jwt_token
+    in: path
+    type: string
+    required: true
+  - name: id_preset
+    in: path
+    type: integer
+    required: true
+responses:
+  200:
+    description: A list of colors (may be filtered by palette)
+
+

@@ -1,0 +1,140 @@
+version: '3'
+services:
+  service_auth:
+    build: ./auth
+    container_name: service_auth
+    restart: always
+    command: bash -c "DJANGO_SETTINGS_MODULE=auth.settings.prod python manage.py migrate &&
+                      DJANGO_SETTINGS_MODULE=auth.settings.prod python manage.py makemigrations user &&
+                      DJANGO_SETTINGS_MODULE=auth.settings.prod python manage.py makemigrations data &&
+                      DJANGO_SETTINGS_MODULE=auth.settings.prod python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:6000 --settings=auth.settings.prod"
+    volumes:
+      - ./auth:/auth
+    ports:
+      - 6000:6000
+    env_file: .env
+
+  service_celery:
+    build: ./auth
+    container_name: service_celery
+    restart: always
+    command: bash -c "DJANGO_SETTINGS_MODULE=auth.settings.prod celery -A auth worker -B -l INFO"
+    volumes:
+      - ./auth:/auth
+    env_file: .env
+
+
+  service_video:
+    build: ./service_video
+    container_name: service_video
+    restart: always
+    command: bash -c "flask db stamp head && flask db migrate && flask db upgrade && python3 app.py"
+    volumes:
+      - ./service_video:/service_video
+    ports:
+      - 6001:6001
+    env_file: .env
+
+  service_recognize:
+    build: ./service_recognize
+    container_name: service_recognize
+    restart: always
+    command: bash -c "python3 main.py"
+    volumes:
+      - ./service_recognize:/service_recognize
+    env_file: .env
+
+  service_extractor:
+    build: ./service_extractor
+    container_name: service_extractor
+    restart: always
+    command: bash -c "python3 main.py"
+    volumes:
+      - ./service_extractor:/service_extractor
+    env_file: .env
+
+  service_download_video:
+    build: ./service_download_video
+    container_name: service_download_video
+    restart: always
+    command: bash -c "python3 main.py"
+    volumes:
+      - ./service_download_video:/service_download_video
+    env_file: .env
+
+  service_editor:
+    build: ./service_editor
+    container_name: service_editor
+    restart: always
+    command: bash -c "python3 main.py"
+    volumes:
+      - ./service_editor:/service_editor
+    env_file: .env
+
+  service_websocket:
+    build: ./service_websocket
+    container_name: service_websocket
+    restart: always
+    command: bash -c "python3 main.py"
+    ports:
+      - 6002:6002
+    volumes:
+      - ./service_websocket:/service_websocket
+    env_file: .env
+
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: "rabbit"
+    container_name: rabbit
+    env_file: .env
+    ports:
+      - 15672:15672
+      - 5672:5672
+    logging:
+      driver: none
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    restart: always
+    logging:
+      driver: none
+
+  db_auth:
+    image: postgres:12
+    container_name: db_auth
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: suptitle
+      POSTGRES_PASSWORD: suptitle
+    ports:
+      - 5434:5432
+    volumes:
+      - db_auth:/var/lib/postgresql/data
+    logging:
+      driver: none
+
+  db_video:
+    image: postgres:12
+    container_name: db_video
+    environment:
+      POSTGRES_DB: video
+      POSTGRES_USER: suptitle
+      POSTGRES_PASSWORD: suptitle
+    ports:
+      - 5432:5432
+    volumes:
+      - db_video:/var/lib/postgresql/data
+    logging:
+      driver: none
+
+
+volumes:
+  db_auth:
+    driver: local
+  db_video:
+    driver: local
+

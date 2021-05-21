@@ -1,0 +1,61 @@
+{
+  "prices": [
+    {
+      "id": 0,
+      "title": "Trial",
+      "desc": {
+                "Automatic video captions": true,
+                "Progress bar animations": true,
+                "Logo upload": true,
+                "Video resizing": true,
+                "Custom headlines": false,
+                "Caption styling & positioning": false,
+                "200+ preloaded fonts": false,
+                "Download .SRT file": false,
+                "60+ supported languages": false,
+                "Premium support": false,
+                "Upload custom font files": false
+            },
+      "price": 0.0,
+      "count": 1
+    },
+    {
+      "id": 1,
+      "title": "Standart",
+      "desc": {
+                "Automatic video captions": true,
+                "Progress bar animations": true,
+                "Logo upload": true,
+                "Video resizing": true,
+                "Custom headlines": true,
+                "Caption styling & positioning": true,
+                "200+ preloaded fonts": true,
+                "Download .SRT file": false,
+                "60+ supported languages": false,
+                "Premium support": false,
+                "Upload custom font files": false
+            },
+      "price": 11.0,
+      "count": 10
+    },
+    {
+      "id": 2,
+      "title": "Elite",
+      "desc": {
+                "Automatic video captions": true,
+                "Progress bar animations": true,
+                "Logo upload": true,
+                "Video resizing": true,
+                "Custom headlines": true,
+                "Caption styling & positioning": true,
+                "200+ preloaded fonts": true,
+                "Download .SRT file": true,
+                "60+ supported languages": true,
+                "Premium support": true,
+                "Upload custom font files": true
+            },
+      "price": 35.0,
+      "count": 30
+    }
+  ]
+}
